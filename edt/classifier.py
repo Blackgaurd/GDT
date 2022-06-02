@@ -276,7 +276,7 @@ class EDTClassifier:
     def __init__(
         self,
         population_size: int,
-        split_proba: float,
+        split_probability: float,
         selectors: List[Tuple[Selector, float]],
         crossover_probability: float,
         mutation_probability: float,
@@ -284,7 +284,7 @@ class EDTClassifier:
         fitness_evaluator: FitnessEvaluator,
     ) -> None:
         self.population_size = population_size
-        self.split_proba = split_proba
+        self.split_p = split_probability
         self.cross_p = crossover_probability
         self.mut_p = mutation_probability
         self.optimal_depth = optimal_depth
@@ -328,7 +328,7 @@ class EDTClassifier:
         if self.population is None:
             # initiate population
             self.population = [
-                DecisionTree.generate_random(self.optimal_depth, self.split_proba)
+                DecisionTree.generate_random(self.optimal_depth, self.split_p)
                 for _ in range(n)
             ]
 
