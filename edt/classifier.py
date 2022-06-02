@@ -315,13 +315,18 @@ class EDTClassifier:
             val_eval = copy.copy(self.fitness_eval)
             val_eval._init(valX, valY)
 
+        # fit history
+        history = []
+
         # main loop
         for gen in range(1, generations + 1):
             fitnesses = [train_eval(tree) for tree in self.population]
 
             if verbose and gen % verbose == 0:
-                self._verbose(
-                    gen, generations, train_eval, validation, val_eval, fitnesses
+                history.append(
+                    self._verbose(
+                        gen, generations, train_eval, validation, val_eval, fitnesses
+                    )
                 )
 
             new_pop = []
@@ -345,6 +350,8 @@ class EDTClassifier:
         fp = sorted(zip(fitnesses, self.population), key=lambda x: x[0], reverse=True)
         self.population = [fp[i][1] for i in range(n)]
 
+        return history
+
     def _verbose(
         self,
         gen: int,
@@ -358,27 +365,40 @@ class EDTClassifier:
         tree_gen = tuple(tree.depth for tree in self.population)
         max_depth = max(tree_gen)
         min_depth = min(tree_gen)
-        average_depth = statistics.mean(tree_gen)
+        avg_depth = statistics.mean(tree_gen)
         median_depth = statistics.median(tree_gen)
         std_depth = statistics.stdev(tree_gen)
 
         if validation:
             val_accuracies = tuple(val_eval.accuracy(tree) for tree in self.population)
+            avg_val_accuracy = statistics.mean(val_accuracies)
+
+        avg_fitness = statistics.mean(fitnesses)
+        avg_accuracy = statistics.mean(accuracies)
 
         print(f"Generation {gen}/{generations}")
-        print(f"Average fitness: {sum(fitnesses) / len(fitnesses)}")
-        print(f"Average accuracy: {sum(accuracies) / len(accuracies)}")
+        print(f"Average fitness: {avg_fitness:.4f}")
+        print(f"Average accuracy: {avg_accuracy:.4f}")
         if validation:
-            print(
-                f"Average validation accuracy: {sum(val_accuracies) / len(val_accuracies)}"
-            )
+            print(f"Average validation accuracy: {avg_val_accuracy:.4f}")
         print("Tree depths:")
         print(f"- max    : {max_depth}")
         print(f"- min    : {min_depth}")
-        print(f"- average: {average_depth:.2f}")
+        print(f"- average: {avg_depth:.2f}")
         print(f"- median : {median_depth:.2f}")
         print(f"- std    : {std_depth:.2f}")
         print()
+
+        return {
+            "generation": gen,
+            "avg_fitness": avg_fitness,
+            "avg_accuracy": avg_accuracy,
+            "max_depth": max_depth,
+            "min_depth": min_depth,
+            "avg_depth": avg_depth,
+            "median_depth": median_depth,
+            "std_depth": std_depth,
+        }
 
     def predict(self, X: np.ndarray, top_k: float = 1) -> List[int]:
         assert 0 < top_k <= 1
