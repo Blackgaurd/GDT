@@ -8,6 +8,7 @@ import numpy as np
 import pygraphviz as pgv
 
 from .selection import Selector
+from .fitness import FitnessEvaluator
 
 data_loaded = 0
 
@@ -182,32 +183,6 @@ class DecisionTree:
             g.write(filename)
         else:
             raise ValueError("Unsupported file type")
-
-
-class FitnessEvaluator:
-    def __init__(
-        self, a1: float, a2: float, f2_func: Callable[[int, int], float]
-    ) -> None:
-        self.a1 = a1
-        self.a2 = a2
-        self.X: Optional[np.ndarray] = None
-        self.Y: Optional[np.ndarray] = None
-        self.f2_func = f2_func
-
-    def _init(self, X: np.ndarray, Y: np.ndarray) -> None:
-        self.X = X
-        self.Y = Y
-
-    def accuracy(self, individual: DecisionTree) -> float:
-        predictions = np.array(individual.classify_many(self.X), dtype=int)
-        return np.sum(predictions == self.Y) / len(self.Y)
-
-    def __call__(self, individual: DecisionTree) -> float:
-        f1 = self.accuracy(individual)
-        # TODO: update f2 to non-linear function that intersects y=0 at x=optimal_depth
-        f2 = self.f2_func(individual.depth, individual.optimal_depth)
-
-        return self.a1 * f1 + self.a2 * f2
 
 
 def crossover_v2(
