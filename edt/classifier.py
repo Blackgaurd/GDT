@@ -185,6 +185,10 @@ class DecisionTree:
             raise ValueError("Unsupported file type")
 
 
+def qlog2(x: int) -> int:
+    return (x - 1).bit_length() - 1
+
+
 def crossover_v2(
     p1: DecisionTree, p2: DecisionTree
 ) -> Tuple[DecisionTree, DecisionTree]:
@@ -203,6 +207,10 @@ def crossover_v2(
                 q.append((si * 2, di * 2))
                 q.append((si * 2 + 1, di * 2 + 1))
 
+        # del is slightly faster than .pop()
+        while dest.nodes[-1] is None:
+            del dest.nodes[-1]
+
         # clean unused nodes
         reachable = [False for i in range(len(dest.nodes))]
         q = deque([dest_ind])
@@ -217,6 +225,11 @@ def crossover_v2(
             if cur * 2 < len(dest.nodes):
                 q.append(cur * 2)
                 q.append(cur * 2 + 1)
+
+        while dest.nodes[-1] is None:
+            del dest.nodes[-1]
+
+        dest.depth = qlog2(len(dest.nodes))
 
     # start from 2 to avoid root node
     p1_inds = [i for i in range(2, len(p1.nodes)) if p1.nodes[i] is not None]
