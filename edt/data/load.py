@@ -1,12 +1,13 @@
 import os
 import pickle as pkl
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Tuple
 
 import numpy as np
 import pandas as pd
 
-DIR = os.path.dirname(os.path.realpath(__file__))
+DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
 
 @dataclass
@@ -27,7 +28,7 @@ class Data:
 # data cache decorator
 def data_cache(func):
     def wrapper(*args, **kwargs):
-        file_name = f"{DIR}/cache/{func.__name__}.pkl"
+        file_name = DIR / "cache" / f"{func.__name__}.pkl"
         if not os.path.isfile(file_name):
             data = func(*args, **kwargs)
             pkl.dump(data, open(file_name, "wb"))
@@ -40,14 +41,14 @@ def data_cache(func):
 
 
 def clear_cache(func_name):
-    if os.path.isfile(f"{DIR}/cache/{func_name}.pkl"):
-        os.remove(f"{DIR}/cache/{func_name}.pkl")
+    if os.path.isfile(DIR / "cache" / f"{func_name}.pkl"):
+        os.remove(DIR / "cache" / f"{func_name}.pkl")
 
 
 @data_cache
 def load_titanic():
-    train = pd.read_csv(f"{DIR}/titanic/train.csv")
-    test = pd.read_csv(f"{DIR}/titanic/test.csv")
+    train = pd.read_csv(DIR / "titanic" / "train.csv")
+    test = pd.read_csv(DIR / "titanic" / "test.csv")
 
     # drop unnecessary columns
     trainY = train["Survived"]
@@ -81,7 +82,7 @@ def load_titanic():
 
 @data_cache
 def load_iris():
-    train = pd.read_csv(f"{DIR}/iris/train.csv")
+    train = pd.read_csv(DIR / "isris" / "train.csv")
 
     train["Species"].replace(
         {"Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2}, inplace=True
@@ -102,7 +103,7 @@ def load_iris():
 
 @data_cache
 def load_mushroom(replace_missing=True):
-    train = pd.read_csv(f"{DIR}/mushroom/train.csv")
+    train = pd.read_csv(DIR / "mushroom" / "train.csv")
     train["poisonous"].replace({"e": 0, "p": 1}, inplace=True)
 
     trainX = train.loc[:, train.columns != "poisonous"]
