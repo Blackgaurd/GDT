@@ -2,7 +2,7 @@ import copy
 import random
 import statistics
 from collections import deque
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pygraphviz as pgv

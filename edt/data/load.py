@@ -2,7 +2,7 @@ import os
 import pickle as pkl
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Tuple
+from typing import Callable, Tuple
 
 import numpy as np
 import pandas as pd
@@ -26,7 +26,7 @@ class Data:
 
 
 # data cache decorator
-def data_cache(func):
+def data_cache(func: Callable) -> Callable:
     def wrapper(*args, **kwargs):
         file_name = DIR / "cache" / f"{func.__name__}.pkl"
         if not os.path.isfile(file_name):
@@ -40,7 +40,7 @@ def data_cache(func):
     return wrapper
 
 
-def clear_cache(func_name):
+def clear_cache(func_name: str):
     if os.path.isfile(DIR / "cache" / f"{func_name}.pkl"):
         os.remove(DIR / "cache" / f"{func_name}.pkl")
 

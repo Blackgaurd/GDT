@@ -11,7 +11,7 @@ pip install git+https://github.com/Blackgaurd/edt.git
 ## Example
 
 ```python
-from edt.classifier import EDTClassifier, FitnessEvaluator
+from edt.classifier import EDTClassifier
 from edt.data.load import load_iris
 from edt.fitness import FitnessEvaluator, negative_quadratic
 from edt.selection import Elitism, Tournament
