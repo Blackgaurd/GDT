@@ -40,11 +40,6 @@ def data_cache(func: Callable) -> Callable:
     return wrapper
 
 
-def clear_cache(func_name: str):
-    if os.path.isfile(DIR / "cache" / f"{func_name}.pkl"):
-        os.remove(DIR / "cache" / f"{func_name}.pkl")
-
-
 @data_cache
 def load_titanic():
     train = pd.read_csv(DIR / "titanic" / "train.csv")
