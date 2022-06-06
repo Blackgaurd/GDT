@@ -5,7 +5,7 @@ A proof of concept implementation of using a genetic algorithm to optimize decis
 ## Installation
 
 ```bash
-pip install git+https://github.com/Blackgaurd/edt.git
+pip install git+https://github.com/Blackgaurd/GDT.git
 ```
 
 ## Example
