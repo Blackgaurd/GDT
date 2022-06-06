@@ -1,7 +1,7 @@
-from edt.classifier import EDTClassifier
-from edt.selection import Tournament, Elitism
-from edt.fitness import FitnessEvaluator, negative_quadratic
-from edt.data.load import load_titanic
+from gdt.classifier import GDTClassifier
+from gdt.selection import Tournament, Elitism
+from gdt.fitness import FitnessEvaluator, negative_quadratic
+from gdt.data.load import load_titanic
 
 tmp = load_titanic()
 (X, Y), (X_test, y_test) = tmp.data()
@@ -15,5 +15,5 @@ kwargs = {
     "optimal_depth": 5,
     "fitness_evaluator": FitnessEvaluator(0.8, 0.5, negative_quadratic),
 }
-clf = EDTClassifier(**kwargs)
+clf = GDTClassifier(**kwargs)
 clf.fit(X, Y, 200, verbose=10)

@@ -260,7 +260,7 @@ def mutate(tree: DecisionTree) -> None:
     tree.nodes[ind] = Node.split(feature, random.choice(feature_vals[feature]))
 
 
-class EDTClassifier:
+class GDTClassifier:
     def __init__(
         self,
         population_size: int,

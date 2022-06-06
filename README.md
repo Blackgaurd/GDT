@@ -11,10 +11,10 @@ pip install git+https://github.com/Blackgaurd/edt.git
 ## Example
 
 ```python
-from edt.classifier import EDTClassifier
-from edt.data.load import load_iris
-from edt.fitness import FitnessEvaluator, negative_quadratic
-from edt.selection import Elitism, Tournament
+from gdt.classifier import GDTClassifier
+from gdt.data.load import load_iris
+from gdt.fitness import FitnessEvaluator, negative_quadratic
+from gdt.selection import Elitism, Tournament
 
 (X, Y), (X_test, Y_test) = load_iris().data()
 
@@ -28,6 +28,6 @@ kwargs = {
     "fitness_evaluator": FitnessEvaluator(0.8, 0.1, negative_quadratic),
 }
 
-clf = EDTClassifier(**kwargs)
+clf = GDTClassifier(**kwargs)
 clf.fit(X, Y, 50, verbose=10)
 ```

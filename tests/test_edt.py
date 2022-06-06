@@ -1,4 +1,4 @@
-from edt import __version__
+from gdt import __version__
 
 
 def test_version():

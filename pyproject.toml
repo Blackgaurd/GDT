@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "edt"
+name = "GDT"
 version = "0.1.0"
-description = "Evolutionary Decision Tree Classifier"
+description = "Genetic Decision Tree Classifier"
 authors = ["Bryan Deng <bryan.deng002@gmail.com>"]
 readme = "README.md"
 
