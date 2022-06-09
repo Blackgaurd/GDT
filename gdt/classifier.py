@@ -89,7 +89,7 @@ class DecisionTree:
 
     @classmethod
     def generate_random(cls, optimal_depth: int, split_p: float):
-        assert 0 <= split_p < 1
+        assert 0 < split_p <= 1
         ret = cls(optimal_depth)
 
         # generate tree with bfs
@@ -266,14 +266,12 @@ class GDTClassifier:
         population_size: int,
         split_probability: float,
         selectors: List[Tuple[Selector, float]],
-        crossover_probability: float,
         mutation_probability: float,
         optimal_depth: int,
         fitness_evaluator: FitnessEvaluator,
     ) -> None:
         self.population_size = population_size
         self.split_p = split_probability
-        self.cross_p = crossover_probability
         self.mut_p = mutation_probability
         self.optimal_depth = optimal_depth
         self.fitness_eval = fitness_evaluator
@@ -355,7 +353,7 @@ class GDTClassifier:
             # selection + crossover
             for selector, rounds in self.selectors:
                 for p1, p2 in selector(self.population, fitnesses, rounds):
-                    if selector.do_crossover and random.random() < self.cross_p:
+                    if selector.do_crossover:
                         new_pop.extend(crossover_v2(p1, p2))
                     else:
                         new_pop.extend((p1, p2))
