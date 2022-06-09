@@ -355,7 +355,7 @@ class GDTClassifier:
             # selection + crossover
             for selector, rounds in self.selectors:
                 for p1, p2 in selector(self.population, fitnesses, rounds):
-                    if selector.do_crossover:
+                    if selector.do_crossover and random.random() < self.cross_p:
                         new_pop.extend(crossover_v2(p1, p2))
                     else:
                         new_pop.extend((p1, p2))
