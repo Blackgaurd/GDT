@@ -2,7 +2,7 @@ import copy
 import random
 import statistics
 from collections import deque
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pygraphviz as pgv
@@ -304,10 +304,14 @@ class GDTClassifier:
         generations: int,
         valX: np.ndarray = None,
         valY: np.ndarray = None,
+        get_stats: int = 0,
         verbose: bool = False,
         feature_names: List[str] = None,
         label_names: List[str] = None,
     ) -> None:
+        if verbose:
+            assert get_stats > 0
+
         if data_loaded == 0:
             load_features(X, Y, feature_names, label_names)
 
@@ -335,12 +339,16 @@ class GDTClassifier:
         for gen in range(1, generations + 1):
             fitnesses = [train_eval(tree) for tree in self.population]
 
-            if verbose and gen % verbose == 0:
+            if get_stats != 0 and gen % get_stats == 0:
                 history.append(
-                    self._verbose(
-                        gen, generations, train_eval, validation, val_eval, fitnesses
+                    self._statistics(
+                        gen, train_eval, validation, val_eval, fitnesses
                     )
                 )
+                if verbose:
+                    self._verbose(
+                        generations=generations, validation=validation, **history[-1]
+                    )
 
             new_pop = []
 
@@ -365,15 +373,14 @@ class GDTClassifier:
 
         return history
 
-    def _verbose(
+    def _statistics(
         self,
-        gen: int,
-        generations: int,
+        generation: int,
         train_eval: FitnessEvaluator,
         validation: bool,
         val_eval: FitnessEvaluator,
         fitnesses: List[float],
-    ) -> None:
+    ) -> Dict[str, Any]:
         accuracies = tuple(train_eval.accuracy(tree) for tree in self.population)
         tree_gen = tuple(tree.depth for tree in self.population)
         max_depth = max(tree_gen)
@@ -389,7 +396,33 @@ class GDTClassifier:
         avg_fitness = statistics.mean(fitnesses)
         avg_accuracy = statistics.mean(accuracies)
 
-        print(f"Generation {gen}/{generations}")
+        return {
+            "generation": generation,
+            "avg_fitness": avg_fitness,
+            "avg_accuracy": avg_accuracy,
+            "avg_val_accuracy": avg_val_accuracy if validation else None,
+            "max_depth": max_depth,
+            "min_depth": min_depth,
+            "avg_depth": avg_depth,
+            "median_depth": median_depth,
+            "std_depth": std_depth,
+        }
+
+    def _verbose(
+        self,
+        generation: int,
+        generations: int,
+        avg_fitness: float,
+        avg_accuracy: float,
+        validation: bool,
+        avg_val_accuracy: float,
+        max_depth: int,
+        min_depth: int,
+        avg_depth: float,
+        median_depth: float,
+        std_depth: float,
+    ) -> None:
+        print(f"Generation {generation}/{generations}")
         print(f"Average fitness: {avg_fitness:.4f}")
         print(f"Average accuracy: {avg_accuracy:.4f}")
         if validation:
@@ -401,17 +434,6 @@ class GDTClassifier:
         print(f"- median : {median_depth:.2f}")
         print(f"- std    : {std_depth:.2f}")
         print()
-
-        return {
-            "generation": gen,
-            "avg_fitness": avg_fitness,
-            "avg_accuracy": avg_accuracy,
-            "max_depth": max_depth,
-            "min_depth": min_depth,
-            "avg_depth": avg_depth,
-            "median_depth": median_depth,
-            "std_depth": std_depth,
-        }
 
     def predict(self, X: np.ndarray, top_k: float = 1) -> List[int]:
         assert 0 < top_k <= 1

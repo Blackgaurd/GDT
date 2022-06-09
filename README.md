@@ -1,4 +1,4 @@
-# Evolutionary Decision Tree
+# Genetic Decision Tree
 
 A proof of concept implementation of using a genetic algorithm to optimize decision trees.
 

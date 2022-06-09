@@ -16,4 +16,4 @@ kwargs = {
     "fitness_evaluator": FitnessEvaluator(0.8, 0.5, negative_quadratic),
 }
 clf = GDTClassifier(**kwargs)
-clf.fit(X, Y, 200, verbose=10)
+clf.fit(X, Y, 200, get_stats=25, verbose=True)
