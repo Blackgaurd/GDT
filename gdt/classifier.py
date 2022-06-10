@@ -394,10 +394,15 @@ class GDTClassifier:
         avg_fitness = statistics.mean(fitnesses)
         avg_accuracy = statistics.mean(accuracies)
 
+        max_fitness = max(fitnesses)
+        max_accuracy = max(accuracies)
+
         return {
             "generation": generation,
             "avg_fitness": avg_fitness,
             "avg_accuracy": avg_accuracy,
+            "max_fitness": max_fitness,
+            "max_accuracy": max_accuracy,
             "avg_val_accuracy": avg_val_accuracy if validation else None,
             "max_depth": max_depth,
             "min_depth": min_depth,
@@ -412,6 +417,8 @@ class GDTClassifier:
         generations: int,
         avg_fitness: float,
         avg_accuracy: float,
+        max_fitness: float,
+        max_accuracy: float,
         validation: bool,
         avg_val_accuracy: float,
         max_depth: int,
@@ -421,10 +428,17 @@ class GDTClassifier:
         std_depth: float,
     ) -> None:
         print(f"Generation {generation}/{generations}")
-        print(f"Average fitness: {avg_fitness:.4f}")
-        print(f"Average accuracy: {avg_accuracy:.4f}")
+
+        print("Fitness:")
+        print(f"- average: {avg_fitness:.2f}")
+        print(f"- max    : {max_fitness:.2f}")
+
+        print("Accuracy:")
+        print(f"- average: {avg_accuracy:.2f}")
+        print(f"- max    : {max_accuracy:.2f}")
         if validation:
-            print(f"Average validation accuracy: {avg_val_accuracy:.4f}")
+            print(f"- average validation: {avg_val_accuracy:.4f}")
+
         print("Tree depths:")
         print(f"- max    : {max_depth}")
         print(f"- min    : {min_depth}")
