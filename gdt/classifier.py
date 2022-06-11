@@ -169,7 +169,7 @@ class DecisionTree:
             if node.is_leaf():
                 label = _label_names[node.label]
             else:
-                label = f"{_feature_names[self.feature]} ≤ {self.split_val}"
+                label = f"{_feature_names[node.feature]} ≤ {node.split_val}"
             g.add_node(i, label=label)
         q = deque([1])
         while q:
