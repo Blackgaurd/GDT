@@ -166,7 +166,11 @@ class DecisionTree:
         for i, node in enumerate(self.nodes):
             if node is None:
                 continue
-            g.add_node(i, label=str(node))
+            if node.is_leaf():
+                label = _label_names[node.label]
+            else:
+                label = f"{_feature_names[self.feature]} ≤ {self.split_val}"
+            g.add_node(i, label=label)
         q = deque([1])
         while q:
             cur = q.popleft()
