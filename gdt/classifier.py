@@ -2,7 +2,7 @@ import copy
 import random
 import statistics
 from collections import deque
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pygraphviz as pgv
@@ -117,15 +117,18 @@ class DecisionTree:
             next_pos = node_ind * 2 + 1
 
         if node_type == "leaf":
-            new_node = (
-                Node.leaf(
-                    random.choice(
-                        [i for i in labels if i != self.nodes[next_pos - 1].label]
-                    )
+            if next_pos % 2 == 1 and self.nodes[next_pos - 1].is_leaf():
+                # we don't need to check the case where
+                # next_pos % 2 == 0 and self.nodes[next_pos - 1].is_leaf()
+                # because the algorithm fills left to right
+                # if next_pos is a left child, it is guaranteed that its sibling
+                # right child does not exist
+                filtered = list(
+                    filter(lambda x: x != self.nodes[next_pos - 1].label, labels)
                 )
-                if next_pos % 2 == 1 and self.nodes[next_pos - 1].is_leaf()
-                else Node.leaf(random.choice(labels))
-            )
+                new_node = Node.leaf((random.choice(filtered)))
+            else:
+                new_node = Node.leaf(random.choice(labels))
 
         elif node_type == "split":
             feature = random.choice(features)
@@ -310,7 +313,7 @@ class GDTClassifier:
         verbose: bool = False,
         feature_names: List[str] = None,
         label_names: List[str] = None,
-    ) -> None:
+    ) -> List[Dict[str, Union[int, float]]]:
         if verbose:
             assert get_stats > 0
 
@@ -343,9 +346,7 @@ class GDTClassifier:
 
             if get_stats != 0 and gen % get_stats == 0:
                 history.append(
-                    self._statistics(
-                        gen, train_eval, validation, val_eval, fitnesses
-                    )
+                    self._statistics(gen, train_eval, validation, val_eval, fitnesses)
                 )
                 if verbose:
                     self._verbose(
@@ -382,7 +383,7 @@ class GDTClassifier:
         validation: bool,
         val_eval: FitnessEvaluator,
         fitnesses: List[float],
-    ) -> Dict[str, Any]:
+    ) -> Dict[str, Union[int, float]]:
         accuracies = tuple(train_eval.accuracy(tree) for tree in self.population)
         tree_gen = tuple(tree.depth for tree in self.population)
         max_depth = max(tree_gen)
