@@ -4,7 +4,10 @@ A proof of concept implementation of using a genetic algorithm to optimize decis
 
 ## Installation
 
+Currently this package does not work on windows because pygraphviz is not supported on windows.
+
 ```bash
+sudo apt-get install graphviz graphviz-dev
 pip install git+https://github.com/Blackgaurd/GDT.git
 ```
 
