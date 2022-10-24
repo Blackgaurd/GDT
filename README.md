@@ -4,7 +4,7 @@ A proof of concept implementation of using a genetic algorithm to optimize decis
 
 ## Installation
 
-Currently this package does not work on windows because pygraphviz is not supported on windows.
+Currently, this package **does not work on Windows** because pygraphviz is not supported on Windows.
 
 ```bash
 sudo apt-get install graphviz graphviz-dev
