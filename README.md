@@ -1,6 +1,6 @@
 # Genetic Decision Tree
 
-A proof of concept implementation of using a genetic algorithm to optimize decision trees for data c;assification. Used in my extended essay ([paper here](https://github.com/Blackgaurd/extended-essay)).
+A proof of concept implementation of using a genetic algorithm to optimize decision trees for data classification. A more detailed explanation is given in my ([extended essay](https://github.com/Blackgaurd/extended-essay)).
 
 ## Installation
 
